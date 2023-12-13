@@ -1,4 +1,6 @@
 using BreweryProject.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace BreweryProject
 {

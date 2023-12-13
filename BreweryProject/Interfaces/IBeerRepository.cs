@@ -2,6 +2,6 @@
 {
     public interface IBeerRepository : IGenericRepository<Beer>
     {
-
+        IQueryable<Beer> GetBeersByBrewery(int breweryId);
     }
 }
