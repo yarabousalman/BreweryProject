@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreweryProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231213202312_InitialCreate")]
+    [Migration("20231215183104_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,11 +25,11 @@ namespace BreweryProject.Migrations
 
             modelBuilder.Entity("BreweryProject.Beer", b =>
                 {
-                    b.Property<int>("BeerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BeerId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("AlcoholContent")
                         .HasColumnType("decimal(18,2)");
@@ -44,7 +44,7 @@ namespace BreweryProject.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("BeerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("BreweryId");
 
@@ -56,17 +56,17 @@ namespace BreweryProject.Migrations
 
             modelBuilder.Entity("BreweryProject.Entities.Brewery", b =>
                 {
-                    b.Property<int>("BreweryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BreweryId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("BreweryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();

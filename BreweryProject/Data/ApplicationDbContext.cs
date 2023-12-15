@@ -14,14 +14,32 @@ namespace BreweryProject.DataManagers.Data
         {
             modelBuilder.Entity<Brewery>(b =>
             {
-                b.HasKey(e => e.BreweryId);
-                b.Property(e => e.BreweryId).ValueGeneratedOnAdd();
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Beer>(b =>
             {
-                b.HasKey(e => e.BeerId);
-                b.Property(e => e.BeerId).ValueGeneratedOnAdd();
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Wholesaler>(b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<SaleOrder>(b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Stock>(b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Brewery>()
@@ -29,10 +47,33 @@ namespace BreweryProject.DataManagers.Data
            .WithOne()
            .HasForeignKey(p => p.BreweryId);
 
-           
-            modelBuilder.Entity<Brewery>().HasIndex(_ => _.Name).IsUnique();
+            modelBuilder.Entity<Wholesaler>()
+           .HasMany(p => p.SaleOrders)
+           .WithOne()
+           .HasForeignKey(p => p.WholesalerId);
+
+            modelBuilder.Entity<Wholesaler>()
+            .HasMany(p => p.Stocks)
+            .WithOne()
+            .HasForeignKey(p => p.WholesalerId);
+
+            modelBuilder.Entity<Beer>()
+            .HasMany(p => p.SaleOrders)
+            .WithOne()
+            .HasForeignKey(p => p.BeerId);
+
+            modelBuilder.Entity<Beer>()
+            .HasMany(p => p.Stocks)
+            .WithOne()
+            .HasForeignKey(p => p.BeerId);
+
 
             modelBuilder.Entity<Beer>().HasIndex(_ => _.Name).IsUnique();
+
+            modelBuilder.Entity<Brewery>().HasIndex(_ => _.Name).IsUnique();
+
+            modelBuilder.Entity<Wholesaler>().HasIndex(_ => _.Name).IsUnique();
+
         }
     }
 }

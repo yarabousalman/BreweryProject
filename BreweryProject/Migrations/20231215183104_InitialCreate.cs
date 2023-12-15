@@ -12,20 +12,20 @@ namespace BreweryProject.Migrations
                 name: "Brewery",
                 columns: table => new
                 {
-                    BreweryId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Brewery", x => x.BreweryId);
+                    table.PrimaryKey("PK_Brewery", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Beer",
                 columns: table => new
                 {
-                    BeerId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BreweryId = table.Column<int>(type: "int", nullable: false),
@@ -34,12 +34,12 @@ namespace BreweryProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Beer", x => x.BeerId);
+                    table.PrimaryKey("PK_Beer", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Beer_Brewery_BreweryId",
                         column: x => x.BreweryId,
                         principalTable: "Brewery",
-                        principalColumn: "BreweryId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 

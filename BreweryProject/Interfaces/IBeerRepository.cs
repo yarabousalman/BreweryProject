@@ -1,7 +1,11 @@
-﻿namespace BreweryProject.DataManagers.Interfaces
+﻿using BreweryProject.Data;
+
+namespace BreweryProject.DataManagers.Interfaces
 {
     public interface IBeerRepository : IGenericRepository<Beer>
     {
-        IQueryable<Beer> GetBeersByBrewery(int breweryId);
+        DataResult<IQueryable<Beer>> GetBeersByBrewery(int breweryId);
+
+        Task<DataResult<Beer>> CreateBeer(Beer beerToAdd);
     }
 }
