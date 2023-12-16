@@ -11,7 +11,6 @@ namespace BreweryProject
         public int BreweryId { get; set; }
         public decimal AlcoholContent { get; set; }
         public decimal Price { get; set; }
-        public List<SaleOrder> SaleOrders { get; set; }
-        public List<Stock> Stocks { get; set; }
+
     }
 }

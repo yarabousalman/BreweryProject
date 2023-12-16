@@ -1,6 +1,8 @@
 using BreweryProject.DataManagers.Data;
 using BreweryProject.DataManagers.Interfaces;
 using BreweryProject.DataManagers.Repositories;
+using BreweryProject.Interfaces;
+using BreweryProject.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IBeerRepository, BeerRepository>();
+builder.Services.AddScoped<ISaleOrderRepository, SaleOrderRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 
 var app = builder.Build();

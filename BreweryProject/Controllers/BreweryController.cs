@@ -1,6 +1,7 @@
 using BreweryProject.Data;
 using BreweryProject.DataManagers.Interfaces;
 using BreweryProject.Entities;
+using BreweryProject.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BreweryProject.Controllers
@@ -12,18 +13,24 @@ namespace BreweryProject.Controllers
         private IGenericRepository<Beer> _beerRepository;
         private IBeerRepository _iBeerRepository;
         private IGenericRepository<Brewery> _breweryRepository;
+        private ISaleOrderRepository _iSaleOrderRepository;
+        private IStockRepository _iStockRepository;
 
-        public BreweryController(IGenericRepository<Beer> beerRepository, IBeerRepository iBeerRepository, IGenericRepository<Brewery> breweryRepository)
+
+        public BreweryController(IGenericRepository<Beer> beerRepository, IBeerRepository iBeerRepository, IGenericRepository<Brewery> breweryRepository,
+            ISaleOrderRepository iSaleOrderRepository, IStockRepository iStockRepository)
         {
             _beerRepository = beerRepository;
             _iBeerRepository = iBeerRepository;
             _breweryRepository = breweryRepository;
+            _iSaleOrderRepository = iSaleOrderRepository;
+            _iStockRepository = iStockRepository;
         }
 
-        [HttpGet("GetAllBeers")]
-        public DataResult<IQueryable<Beer>> GetAllBeers()
+        [HttpGet("GetBeersByBrewery")]
+        public DataResult<IQueryable<Beer>> GetBeersByBrewery(int breweryId)
         {
-            return _beerRepository.GetAll();
+            return _iBeerRepository.GetBeersByBrewery(breweryId);
         }
 
         [HttpPost("CreateBeer")]
@@ -38,10 +45,16 @@ namespace BreweryProject.Controllers
             return _beerRepository.Delete(beerId);
         }
 
-        [HttpGet("GetBeersByBrewery")]
-        public DataResult<IQueryable<Beer>> GetBeersByBrewery(int breweryId)
+        [HttpPost("CreateSaleOrder")]
+        public Task<DataResult<SaleOrder>> CreateSaleOrder(SaleOrder saleOrderToAdd)
         {
-            return _iBeerRepository.GetBeersByBrewery(breweryId);
+            return _iSaleOrderRepository.CreateSaleOrder(saleOrderToAdd);
+        }
+
+        [HttpPost("UpdateStock")]
+        public Task<DataResult<Stock>> UpdateStock(Stock stockToUpdate)
+        {
+            return _iStockRepository.UpdateStock(stockToUpdate);
         }
     }
 }

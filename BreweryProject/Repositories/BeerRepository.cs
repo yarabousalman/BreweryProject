@@ -2,6 +2,7 @@
 using BreweryProject.DataManagers.Data;
 using BreweryProject.DataManagers.Interfaces;
 using BreweryProject.Entities;
+using BreweryProject.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -22,8 +23,8 @@ namespace BreweryProject.DataManagers.Repositories
             try
             {
                 var breweryRepo = new GenericRepository<Brewery>(_dbContext);
-                var brewery = breweryRepo.GetById(beerToAdd.BreweryId);
-                if (brewery.Result.Data != null)
+                var brewery = await breweryRepo.GetById(beerToAdd.BreweryId);
+                if (brewery.Data != null)
                 {
                     dataResult = await Create(beerToAdd);
                 }

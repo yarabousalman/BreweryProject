@@ -57,23 +57,13 @@ namespace BreweryProject.DataManagers.Data
             .WithOne()
             .HasForeignKey(p => p.WholesalerId);
 
-            modelBuilder.Entity<Beer>()
-            .HasMany(p => p.SaleOrders)
-            .WithOne()
-            .HasForeignKey(p => p.BeerId);
-
-            modelBuilder.Entity<Beer>()
-            .HasMany(p => p.Stocks)
-            .WithOne()
-            .HasForeignKey(p => p.BeerId);
-
-
             modelBuilder.Entity<Beer>().HasIndex(_ => _.Name).IsUnique();
 
             modelBuilder.Entity<Brewery>().HasIndex(_ => _.Name).IsUnique();
 
             modelBuilder.Entity<Wholesaler>().HasIndex(_ => _.Name).IsUnique();
 
+            modelBuilder.Entity<Stock>().HasIndex(_ => _.BeerId).IsUnique();
         }
     }
 }

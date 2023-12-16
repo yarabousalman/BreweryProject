@@ -62,7 +62,7 @@ namespace BreweryProject.DataManagers.Repositories
             return dataResult;
         }
 
-        public async Task<DataResult<T>> Update(int id, T entity)
+        public async Task<DataResult<T>> Update(T entity)
         {
             var dataResult = new DataResult<T>();
             try

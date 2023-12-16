@@ -11,7 +11,7 @@ namespace BreweryProject.DataManagers.Interfaces
 
         Task<DataResult<T>> Create(T entity);
 
-        Task<DataResult<T>> Update(int id, T entity);
+        Task<DataResult<T>> Update(T entity);
 
         Task<DataResult<string>> Delete(int id);
     }

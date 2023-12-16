@@ -3,6 +3,7 @@ using BreweryProject.DataManagers.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreweryProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231216162320_UpdateStockTableColumns")]
+    partial class UpdateStockTableColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,6 +93,8 @@ namespace BreweryProject.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BeerId");
+
                     b.HasIndex("WholesalerId");
 
                     b.ToTable("SaleOrder");
@@ -154,6 +158,12 @@ namespace BreweryProject.Migrations
 
             modelBuilder.Entity("BreweryProject.Entities.SaleOrder", b =>
                 {
+                    b.HasOne("BreweryProject.Beer", null)
+                        .WithMany("SaleOrders")
+                        .HasForeignKey("BeerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BreweryProject.Entities.Wholesaler", null)
                         .WithMany("SaleOrders")
                         .HasForeignKey("WholesalerId")
@@ -163,11 +173,24 @@ namespace BreweryProject.Migrations
 
             modelBuilder.Entity("BreweryProject.Entities.Stock", b =>
                 {
+                    b.HasOne("BreweryProject.Beer", null)
+                        .WithMany("Stocks")
+                        .HasForeignKey("BeerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BreweryProject.Entities.Wholesaler", null)
                         .WithMany("Stocks")
                         .HasForeignKey("WholesalerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BreweryProject.Beer", b =>
+                {
+                    b.Navigation("SaleOrders");
+
+                    b.Navigation("Stocks");
                 });
 
             modelBuilder.Entity("BreweryProject.Entities.Brewery", b =>
