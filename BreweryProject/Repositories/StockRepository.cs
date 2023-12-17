@@ -45,7 +45,7 @@ namespace BreweryProject.Repositories
                     }
                     else
                     {
-                        dataResult = await Create(stockToUpdate);
+                        dataResult.ErrorMessage = "Stock for this beer does not exist.";
                     }
                 }
             }
