@@ -1,4 +1,4 @@
-﻿namespace BreweryProject.Entities
+﻿namespace BreweryProject.Interfaces
 {
     public interface IEntity
     {

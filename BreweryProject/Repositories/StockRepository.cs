@@ -17,7 +17,7 @@ namespace BreweryProject.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<DataResult<Stock>> UpdateStock(Stock stockToUpdate, bool isSaleOrder = false)
+        public async Task<DataResult<Stock>> UpdateStock(Stock stockToUpdate)
         {
             var dataResult = new DataResult<Stock>();
             try
@@ -41,8 +41,6 @@ namespace BreweryProject.Repositories
                     if (stock.Data != null)
                     {
                         stockToUpdate.Id = stock.Data.Id;
-                        if(isSaleOrder)
-                            stockToUpdate.Amount += stock.Data.Amount;
                         dataResult = await Update(stockToUpdate);
                     }
                     else
@@ -73,6 +71,47 @@ namespace BreweryProject.Repositories
             }
             return dataResult;
 
+        }
+
+        public async Task<DataResult<Stock>> AddToStock(Stock stockToUpdate)
+        {
+            var dataResult = new DataResult<Stock>();
+            try
+            {
+                var stock = await GetStockByBeerId(stockToUpdate.BeerId);
+                if (stock.Data != null)
+                {
+                    stockToUpdate.Id = stock.Data.Id;
+                    stockToUpdate.Amount += stockToUpdate.Amount;
+                    dataResult = await Update(stockToUpdate);
+                }
+                else
+                {
+                    dataResult = await Create(stockToUpdate);
+                }
+            }
+            catch (Exception ex)
+            {
+                dataResult.ErrorMessage = JsonConvert.SerializeObject(ex);
+            }
+            return dataResult;
+        }
+
+        public async Task<DataResult<Stock>> RemoveFromStock(Stock stockToUpdate)
+        {
+            var dataResult = new DataResult<Stock>();
+            try
+            {
+                var stock = await GetStockByBeerId(stockToUpdate.BeerId);
+                stockToUpdate.Id = stock.Data.Id;
+                stockToUpdate.Amount -= stockToUpdate.Amount;
+                dataResult = await Update(stockToUpdate);
+            }
+            catch (Exception ex)
+            {
+                dataResult.ErrorMessage = JsonConvert.SerializeObject(ex);
+            }
+            return dataResult;
         }
     }
 }

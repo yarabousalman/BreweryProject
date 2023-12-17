@@ -1,4 +1,6 @@
-﻿namespace BreweryProject.Entities
+﻿using BreweryProject.Interfaces;
+
+namespace BreweryProject.Entities
 {
     public class Wholesaler : IEntity
     {

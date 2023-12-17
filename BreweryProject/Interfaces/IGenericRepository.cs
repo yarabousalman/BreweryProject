@@ -1,5 +1,6 @@
 ﻿using BreweryProject.Data;
 using BreweryProject.Entities;
+using BreweryProject.Interfaces;
 
 namespace BreweryProject.DataManagers.Interfaces
 {

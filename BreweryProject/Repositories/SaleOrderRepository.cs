@@ -39,12 +39,12 @@ namespace BreweryProject.Repositories
                     if (dataResult.Data != null)
                     {
                         var stockRepo = new StockRepository(_dbContext);
-                        var stockDataResult = await stockRepo.UpdateStock(new Stock
+                        var stockDataResult = await stockRepo.AddToStock(new Stock
                         {
                             BeerId = saleOrderToAdd.BeerId,
                             Amount = saleOrderToAdd.Amount,
                             WholesalerId = saleOrderToAdd.WholesalerId
-                        }, true);
+                        });
                         if (stockDataResult.ErrorMessage != null)
                         {
                             dataResult.ErrorMessage = $"Sale Order was created but the following error occured when updating the stock: {stockDataResult.ErrorMessage}";

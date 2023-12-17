@@ -2,6 +2,7 @@
 using BreweryProject.DataManagers.Data;
 using BreweryProject.DataManagers.Interfaces;
 using BreweryProject.Entities;
+using BreweryProject.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

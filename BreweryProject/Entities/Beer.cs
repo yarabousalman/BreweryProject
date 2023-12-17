@@ -1,4 +1,5 @@
 using BreweryProject.Entities;
+using BreweryProject.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
