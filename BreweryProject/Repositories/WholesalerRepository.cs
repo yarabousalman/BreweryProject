@@ -23,15 +23,15 @@ namespace BreweryProject.Repositories
             decimal total = 0;
             int drinkCount = 0;
             var beersSold = new Dictionary<int, int>();
-            if (!quoteRequest.BeerRequests.Any())
+            if (quoteRequest.BeerRequests == null || !quoteRequest.BeerRequests.Any())
             {
-                dataResult.ErrorMessage = "The order cannot be empty";
+                dataResult.ErrorMessage = "The order cannot be empty.";
             }
-            else if(wholesaler == null)
+            else if (wholesaler.Data == null)
             {
                 dataResult.ErrorMessage = "The wholesaler does not exist.";
             }
-            else if(quoteRequest.BeerRequests.GroupBy(_=>_.Id).ToList().Count != quoteRequest.BeerRequests.Count)
+            else if (quoteRequest.BeerRequests.GroupBy(_ => _.Id).ToList().Count != quoteRequest.BeerRequests.Count)
             {
                 dataResult.ErrorMessage = "There can't be any duplicate in the order.";
             }
@@ -47,7 +47,7 @@ namespace BreweryProject.Repositories
                         dataResult.ErrorMessage = $"Beer having Id {requestedBeer.Id} does not exist in the stock.";
                         break;
                     }
-                    else if(stock.Data.Amount < requestedBeer.Amount)
+                    else if (stock.Data.Amount < requestedBeer.Amount)
                     {
                         dataResult.ErrorMessage = $"There is not enough stock for beer having Id {requestedBeer.Id}.";
                         break;
@@ -57,7 +57,7 @@ namespace BreweryProject.Repositories
                         var beer = await beerRepo.GetById(requestedBeer.Id);
                         if (beer.Data != null)
                         {
-                            total += beer.Data.Price;
+                            total += beer.Data.Price * requestedBeer.Amount;
                             drinkCount += requestedBeer.Amount;
                             beersSold.Add(beer.Data.Id, requestedBeer.Amount);
                         }
@@ -68,31 +68,36 @@ namespace BreweryProject.Repositories
                         }
                     }
                 }
-                if (drinkCount > 10)
+                if (dataResult.ErrorMessage == null)
                 {
-                    total = total * (decimal)0.9;
-                }
-                else if(drinkCount > 20)
-                {
-                    total = total * (decimal)0.8;
-                }
-                dataResult.Data.Price = total;
-                var quoteSummary = new StringBuilder();
-                foreach(var soldBeer in beersSold)
-                {
-                    quoteSummary.Append($"{soldBeer.Value} beers of {soldBeer.Key}.");
-
-                    await stockRepo.RemoveFromStock(new Stock
+                    if (drinkCount > 10 && drinkCount <= 20)
                     {
-                        WholesalerId = quoteRequest.WholesalerId,
-                        BeerId = soldBeer.Key,
-                        Amount = soldBeer.Value
-                    });
-                }
-                quoteSummary.Append($"For a total of {total}");
-                dataResult.Data.Summary = quoteSummary.ToString();
-            }
+                        total = total * (decimal)0.9;
+                    }
+                    else if (drinkCount > 20)
+                    {
+                        total = total * (decimal)0.8;
+                    }
+                    dataResult.Data = new QuoteResult
+                    {
+                        Price = total
+                    };
+                    var quoteSummary = new StringBuilder();
+                    foreach (var soldBeer in beersSold)
+                    {
+                        quoteSummary.Append($"{soldBeer.Value} beers having Id {soldBeer.Key}. ");
 
+                        await stockRepo.RemoveFromStock(new Stock
+                        {
+                            WholesalerId = quoteRequest.WholesalerId,
+                            BeerId = soldBeer.Key,
+                            Amount = soldBeer.Value
+                        });
+                    }
+                    quoteSummary.Append($"For a total of {total}");
+                    dataResult.Data.Summary = quoteSummary.ToString();
+                }
+            }
             return dataResult;
         }
     }

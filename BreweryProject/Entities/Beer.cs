@@ -3,7 +3,7 @@ using BreweryProject.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace BreweryProject
+namespace BreweryProject.Entities
 {
     public class Beer : IEntity
     {
