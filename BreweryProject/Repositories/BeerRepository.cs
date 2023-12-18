@@ -56,15 +56,23 @@ namespace BreweryProject.DataManagers.Repositories
         }
 
         //For simplicity, it is assumed that the brewery Id is known
-        public DataResult<IQueryable<Beer>> GetBeersByBrewery(int breweryId)
+        public async Task<DataResult<IQueryable<Beer>>> GetBeersByBrewery(int breweryId)
         {
             var dataResult = new DataResult<IQueryable<Beer>>();
             try
             {
-                dataResult.Data = _dbContext.Set<Beer>()
-                      .AsNoTracking()
-                      .Where(e => e.BreweryId == breweryId);
-
+                var breweryRepo = new GenericRepository<Brewery>(_dbContext);
+                var brewery = await breweryRepo.GetById(breweryId);
+                if(brewery.Data == null)
+                {
+                    dataResult.ErrorMessage = "Brewery does not exist.";
+                }
+                else
+                {
+                    dataResult.Data = _dbContext.Set<Beer>()
+                     .AsNoTracking()
+                     .Where(e => e.BreweryId == breweryId);
+                }
             }
             catch(Exception ex)
             {

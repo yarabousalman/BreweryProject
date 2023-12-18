@@ -23,7 +23,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IBeerRepository, BeerRepository>();
 builder.Services.AddScoped<ISaleOrderRepository, SaleOrderRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
-
+builder.Services.AddScoped<IWholesalerRepository, WholesalerRepository>();
 
 var app = builder.Build();
 

@@ -43,7 +43,7 @@ namespace BreweryProject.Repositories
                 var beerRepo = new BeerRepository(_dbContext);
                 foreach (var requestedBeer in quoteRequest.BeerRequests)
                 {
-                    var stock = await stockRepo.GetStockByBeerId(requestedBeer.Id);
+                    var stock = await stockRepo.GetWholesalerStockByBeerId(requestedBeer.Id, quoteRequest.WholesalerId);
                     if (stock.Data == null)
                     {
                         dataResult.ErrorMessage = $"Beer having Id {requestedBeer.Id} does not exist in the stock.";
@@ -70,34 +70,45 @@ namespace BreweryProject.Repositories
                         }
                     }
                 }
+
                 if (dataResult.ErrorMessage == null)
                 {
-                    if (drinkCount > 10 && drinkCount <= 20)
+                    if (drinkCount == 0)
                     {
-                        total = total * (decimal)0.9;
+                        dataResult.ErrorMessage = "The order cannot be empty.";
                     }
-                    else if (drinkCount > 20)
+                    else
                     {
-                        total = total * (decimal)0.8;
-                    }
-                    dataResult.Data = new QuoteResult
-                    {
-                        Price = total
-                    };
-                    var quoteSummary = new StringBuilder();
-                    foreach (var soldBeer in beersSold)
-                    {
-                        quoteSummary.Append($"{soldBeer.Value} beers having Id {soldBeer.Key}. ");
-
-                        await stockRepo.RemoveFromStock(new Stock
+                        string discount = "No";
+                        if (drinkCount > 10 && drinkCount <= 20)
                         {
-                            WholesalerId = quoteRequest.WholesalerId,
-                            BeerId = soldBeer.Key,
-                            Amount = soldBeer.Value
-                        });
+                            discount = "10 %";
+                            total = total * (decimal)0.9;
+                        }
+                        else if (drinkCount > 20)
+                        {
+                            discount = "20 %";
+                            total = total * (decimal)0.8;
+                        }
+                        dataResult.Data = new QuoteResult
+                        {
+                            Price = total
+                        };
+                        var quoteSummary = new StringBuilder();
+                        foreach (var soldBeer in beersSold)
+                        {
+                            quoteSummary.Append($"{soldBeer.Value} beers having Id {soldBeer.Key}. ");
+
+                            await stockRepo.RemoveFromStock(new Stock
+                            {
+                                WholesalerId = quoteRequest.WholesalerId,
+                                BeerId = soldBeer.Key,
+                                Amount = soldBeer.Value
+                            });
+                        }
+                        quoteSummary.Append($"For a total of {total}. {discount} discount applied.");
+                        dataResult.Data.Summary = quoteSummary.ToString();
                     }
-                    quoteSummary.Append($"For a total of {total}");
-                    dataResult.Data.Summary = quoteSummary.ToString();
                 }
             }
             return dataResult;

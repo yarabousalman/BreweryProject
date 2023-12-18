@@ -38,7 +38,7 @@ namespace BreweryProject.Repositories
                 }
                 else
                 {
-                    var stock = await GetStockByBeerId(stockToUpdate.BeerId);
+                    var stock = await GetWholesalerStockByBeerId(stockToUpdate.BeerId, stockToUpdate.WholesalerId);
                     if (stock.Data != null)
                     {
                         stockToUpdate.Id = stock.Data.Id;
@@ -58,14 +58,14 @@ namespace BreweryProject.Repositories
         }
 
         //This method gets the stock entity using beer Id
-        public async Task<DataResult<Stock>> GetStockByBeerId(int beerId)
+        public async Task<DataResult<Stock>> GetWholesalerStockByBeerId(int beerId, int wholesalerId)
         {
             var dataResult = new DataResult<Stock>();
             try
             {
                 dataResult.Data = await _dbContext.Set<Stock>()
                         .AsNoTracking()
-                        .FirstOrDefaultAsync(e => e.BeerId == beerId);
+                        .FirstOrDefaultAsync(e => e.BeerId == beerId && e.WholesalerId == wholesalerId);
             }
             catch (Exception ex)
             {
@@ -83,11 +83,11 @@ namespace BreweryProject.Repositories
             var dataResult = new DataResult<Stock>();
             try
             {
-                var stock = await GetStockByBeerId(stockToUpdate.BeerId);
+                var stock = await GetWholesalerStockByBeerId(stockToUpdate.BeerId, stockToUpdate.WholesalerId);
                 if (stock.Data != null)
                 {
                     stockToUpdate.Id = stock.Data.Id;
-                    stockToUpdate.Amount += stockToUpdate.Amount;
+                    stockToUpdate.Amount += stock.Data.Amount;
                     dataResult = await Update(stockToUpdate);
                 }
                 else
@@ -109,9 +109,9 @@ namespace BreweryProject.Repositories
             var dataResult = new DataResult<Stock>();
             try
             {
-                var stock = await GetStockByBeerId(stockToUpdate.BeerId);
+                var stock = await GetWholesalerStockByBeerId(stockToUpdate.BeerId, stockToUpdate.WholesalerId);
                 stockToUpdate.Id = stock.Data.Id;
-                stockToUpdate.Amount -= stockToUpdate.Amount;
+                stockToUpdate.Amount = stock.Data.Amount - stockToUpdate.Amount;
                 dataResult = await Update(stockToUpdate);
             }
             catch (Exception ex)

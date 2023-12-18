@@ -63,12 +63,13 @@ namespace BreweryProject.DataManagers.Data
 
             modelBuilder.Entity<Wholesaler>().HasIndex(_ => _.Name).IsUnique();
 
-            modelBuilder.Entity<Stock>().HasIndex(_ => _.BeerId).IsUnique();
+            modelBuilder.Entity<Stock>().HasIndex("BeerId", "WholesalerId").IsUnique();
         }
 
         public DbSet<Brewery> Breweries { get; set; }
         public DbSet<Beer> Beers { get; set; }
         public DbSet<Wholesaler> Wholesalers { get; set; }
+        public DbSet<SaleOrder> SaleOrders { get; set; }
         public DbSet<Stock> Stocks { get; set; }
     }
 }

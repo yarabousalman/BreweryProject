@@ -3,6 +3,7 @@ using BreweryProject.DataManagers.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BreweryProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231218185333_UpdateTables")]
+    partial class UpdateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,7 +95,7 @@ namespace BreweryProject.Migrations
 
                     b.HasIndex("WholesalerId");
 
-                    b.ToTable("SaleOrders");
+                    b.ToTable("SaleOrder");
                 });
 
             modelBuilder.Entity("BreweryProject.Entities.Stock", b =>
@@ -115,10 +117,10 @@ namespace BreweryProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WholesalerId");
-
-                    b.HasIndex("BeerId", "WholesalerId")
+                    b.HasIndex("BeerId")
                         .IsUnique();
+
+                    b.HasIndex("WholesalerId");
 
                     b.ToTable("Stocks");
                 });
