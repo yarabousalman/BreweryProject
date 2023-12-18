@@ -42,6 +42,27 @@ namespace TestProject1
         }
 
         [Fact]
+        public async void TestZeroAmountQuoteRequest()
+        {
+            var dbContext = await GetDatabaseContext();
+            var repository = new Mock<WholesalerRepository>(dbContext);
+            var dataResult = await repository.Object.RequestQuote(new QuoteRequest
+            {
+                BeerRequests = new List<BeerRequest>
+                {
+                    new BeerRequest
+                    {
+                        Id = 1,
+                        Amount = 0
+                    }
+                },
+                WholesalerId = 11
+            });
+            Assert.Null(dataResult.Data);
+            Assert.Contains("empty", dataResult.ErrorMessage);
+        }
+
+        [Fact]
         public async void TestNonExistentWholesalerQuoteRequest()
         {
             var dbContext = await GetDatabaseContext();
