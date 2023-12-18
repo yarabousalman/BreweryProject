@@ -15,6 +15,8 @@ namespace BreweryProject.Repositories
             _dbContext = dbContext;
         }
 
+        //When a quote request is successful, the stocks relating to this requested are decreased
+        //to reflect the amount that was sold
         public async Task<DataResult<QuoteResult>> RequestQuote(QuoteRequest quoteRequest)
         {
             var dataResult = new DataResult<QuoteResult>();

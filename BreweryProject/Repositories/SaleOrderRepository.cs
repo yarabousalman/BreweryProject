@@ -16,6 +16,8 @@ namespace BreweryProject.Repositories
             _dbContext = dbContext;
         }
 
+        //When creating a sale order, the amount relating to the transaction is added
+        //to the stock of the wholesaler
         public async Task<DataResult<SaleOrder>> CreateSaleOrder(SaleOrder saleOrderToAdd)
         {
             var dataResult = new DataResult<SaleOrder>();
@@ -23,7 +25,7 @@ namespace BreweryProject.Repositories
             {
                 var beerRepo = new BeerRepository(_dbContext);
                 var beer = await beerRepo.GetById(saleOrderToAdd.BeerId);
-                var wholesalerRepo = new GenericRepository<Wholesaler>(_dbContext);
+                var wholesalerRepo = new WholesalerRepository(_dbContext);
                 var wholesaler = await wholesalerRepo.GetById(saleOrderToAdd.WholesalerId);
                 if (beer.Data == null)
                 {

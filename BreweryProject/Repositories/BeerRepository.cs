@@ -17,6 +17,8 @@ namespace BreweryProject.DataManagers.Repositories
             _dbContext = dbContext;
         }
 
+        //This method checks if beer is linked to a brewery
+        //If not, a default brewery is created
         public async Task<DataResult<Beer>> CreateBeer(Beer beerToAdd)
         {
             var dataResult = new DataResult<Beer>();
@@ -53,6 +55,7 @@ namespace BreweryProject.DataManagers.Repositories
             return dataResult;
         }
 
+        //For simplicity, it is assumed that the brewery Id is known
         public DataResult<IQueryable<Beer>> GetBeersByBrewery(int breweryId)
         {
             var dataResult = new DataResult<IQueryable<Beer>>();
