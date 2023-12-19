@@ -56,7 +56,7 @@ namespace TestProject1
                         Amount = 0
                     }
                 },
-                WholesalerId = 11
+                WholesalerId = 1
             });
             Assert.Null(dataResult.Data);
             Assert.Contains("empty", dataResult.ErrorMessage);
@@ -174,7 +174,7 @@ namespace TestProject1
                 WholesalerId = 1
             });
             Assert.NotNull(dataResult.Data);
-            Console.WriteLine(dataResult.Data.Summary, OutputLevel.Information);
+            Assert.Contains("No discount", dataResult.Data.Summary);
         }
 
         [Fact]
@@ -200,7 +200,7 @@ namespace TestProject1
                 WholesalerId = 1
             });
             Assert.NotNull(dataResult.Data);
-            Console.WriteLine(dataResult.Data.Summary, OutputLevel.Information);
+            Assert.Contains("10", dataResult.Data.Summary);
         }
 
         [Fact]
@@ -226,7 +226,7 @@ namespace TestProject1
                 WholesalerId = 1
             });
             Assert.NotNull(dataResult.Data);
-            Console.WriteLine(dataResult.Data.Summary, OutputLevel.Information);
+            Assert.Contains("20", dataResult.Data.Summary);
         }
 
         private async Task<DbContext> GetDatabaseContext()
